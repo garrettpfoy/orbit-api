@@ -1,27 +1,27 @@
 package models
 
 import (
-	"garrettpfoy/orbit-api/internal/services/encryption"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 type AccessToken struct {
-	ID           uint      `gorm:"primaryKey"`
-	UserID       uint      `gorm:"not null"`
-	User         User      `gorm:"foreignKey:UserID"`
-	AccessToken  string    `gorm:"unique;not null"`
-	RefreshToken string    `gorm:"unique;not null"`
-	ExpiryTime   time.Time `gorm:"not null"`
-	CreatedAt    time.Time `gorm:"autoCreateTime"`
-	UpdatedAt    time.Time `gorm:"autoUpdateTime"`
-}
-
-var encryptionService encryption.OrbitEncryptionService
-
-func SetEncryptionService(service encryption.OrbitEncryptionService) {
-	encryptionService = service
+	gorm.Model
+	// User ID represents the user that the token belongs to
+	UserID uint `gorm:"not null"`
+	// User represents the user that the token belongs to, derived from UserID
+	User User
+	// AccessToken is the encrypted access token that is used to make requests to the Spotify API
+	AccessToken string `gorm:"unique;not null"`
+	// RefreshToken is the encrypted refresh token that is used to refresh the access token
+	RefreshToken string `gorm:"unique;not null"`
+	// ExpiryTime is the time that the access token expires
+	ExpiryTime time.Time `gorm:"not null"`
+	// Session ID represents the session that the token belongs to (one-to-one relationship)
+	SessionID uint `gorm:"not null"`
+	// Session represents the session that the token belongs to, derived from SessionID
+	Session Session
 }
 
 func (token *AccessToken) BeforeSave(tx *gorm.DB) (err error) {

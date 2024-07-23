@@ -1,0 +1,23 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
+{
+	"name": "Orbit | Go",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/go:1-1.22-bookworm",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers-community/npm-features/prettier:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"esbenp.prettier-vscode",
+				"golang.go",
+				"ms-azuretools.vscode-docker",
+				"GitHub.copilot"
+			]
+		}
+	},
+    "forwardPorts": [3005], 
+	"remoteUser": "root"
+}

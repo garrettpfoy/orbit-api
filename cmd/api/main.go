@@ -31,19 +31,17 @@ func main() {
 		log.Fatal("failed to establish the orbit environment: ", err)
 	}
 
-	encryptionService := encryption.NewEncryptionService(environment.ENCRYPTION_SECRET)
-
-	// Set the encryption service in the AccessToken model
-	models.SetEncryptionService(encryptionService)
+	models.SetEncryptionService(encryption.NewEncryptionService(environment.ENCRYPTION_SECRET))
 
 	// Auto migrate the schema
-	db.AutoMigrate(&models.Session{}, &models.AccessToken{}, &models.Queue{}, &models.User{}, &models.Vote{})
+	db.AutoMigrate(&models.Session{}, &models.AccessToken{}, &models.Queue{}, &models.User{})
 
-	accessTokenRepo := &access_token.GormAccessTokenRepository{DB: db}
+	accessTokenRepo := access_token.NewGormAccessTokenRepository(db)
 
 	// Example: Creating a new access token
 	newToken := models.AccessToken{
 		UserID:       1, // assuming user ID 1 exists
+		SessionID:    1,
 		AccessToken:  "example_access_token",
 		RefreshToken: "example_refresh_token",
 		ExpiryTime:   time.Now().Add(time.Hour * 1),
